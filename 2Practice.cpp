@@ -34,6 +34,11 @@ int main(int argc, char *argv[])
         for(i=1; i<size; i++){
             MPI_Send(&matrix[section], part*c, MPI_INT, i, 10, MPI_COMM_WORLD);
             MPI_Send(&vector, c, MPI_INT, i, 10, MPI_COMM_WORLD);
+            for(int l=0; l<section; l++){
+                for(int m=0; m<c; m++)
+                    printf("%d ",matrix[l][m]);
+                printf("\n");
+            }
             section += part;
         }
     }
@@ -42,7 +47,7 @@ int main(int argc, char *argv[])
         MPI_Recv(&vector_rec, c, MPI_INT, 0, 10, MPI_COMM_WORLD, &status);
         for(i=0; i<part; i++){
             for(j=0; j<c; j++){
-                final_value += matrix_rec[part][j]*vector_rec[j];
+                final_value += matrix_rec[i][j]*vector_rec[j];
                 printf("%d ", final_value);
             }
         }
