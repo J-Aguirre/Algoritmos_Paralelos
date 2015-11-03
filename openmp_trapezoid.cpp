@@ -6,18 +6,9 @@
 using namespace std;
 
 void Hello(void);/* Thread function */
-void Trap(double a, double b, int n, double* global_result_p);
+double Local_Trap(double a, double b, int n);
 
 int main(int argc, char* argv[]){
-/* Hello
-    /* Get number of threads from command line
-    int thread_count = strtol(argv[1], NULL, 10);
-    # pragma omp parallel num_threads(thread_count)
-    Hello();
-
-    return 0;
-/* Hello*/
-
     double global_result = 0.0;
     double a, b;
     int n;
@@ -26,8 +17,9 @@ int main(int argc, char* argv[]){
     thread_count = strtol(argv[1], NULL, 10);
     printf("Enter a, b and n \n");
     scanf("%lf %lf %d", &a, &b, &n);
-    # pragma omp parallel num_threads(thread_count)
-    Trap(a, b, n, &global_result);
+    # pragma omp parallel num_threads(thread_count) \
+        reduction(+: global_result)
+    global_result += Local_Trap(a, b, n);
 
     printf("With n = %d trapezoids, our estimate\n", n);
     printf("of the integral from %f to %f = %.14e\n", a, b, global_result);
@@ -35,18 +27,11 @@ int main(int argc, char* argv[]){
 }
 /* main */
 
-void Hello(void){
-    int my_rank = omp_get_thread_num();
-    int thread_count = omp_get_num_threads();
-    printf("Hello from thread %d of %d\n", my_rank, thread_count);
-}
-/* Hello */
-
 float f(double x){
     return x*x;
 }
 
-void Trap(double a, double b, int n, double* global_result_p){
+double Local_Trap(double a, double b, int n){
     double h, x, my_result;
     double local_a, local_b;
     int i, local_n;
@@ -59,12 +44,17 @@ void Trap(double a, double b, int n, double* global_result_p){
     local_b = b + local_n*h;
     my_result = (f(local_a) + f(local_b))/2.0;
 
-    for(int i=1; i<local_n-1; i++){
+    for(i=1; i<local_n-1; i++){
         x = local_a + i*h;
         my_result += f(x);
     }
     my_result = my_result*h;
-
-    #pragma omp critical
-    *global_result_p += my_result;
+    return my_result;
 } /* Trap */
+
+void Hello(void){
+    int my_rank = omp_get_thread_num();
+    int thread_count = omp_get_num_threads();
+    printf("Hello from thread %d of %d\n", my_rank, thread_count);
+}
+/* Hello */
