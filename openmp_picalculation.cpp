@@ -1,7 +1,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
+#ifdef _OPENMP
+    #include <omp.h>
+#endif
 
 using namespace std;
 
@@ -10,7 +12,7 @@ double Local_Pi();
 int main(int argc, char* argv[]){
     double global_result = 0.0;
     int thread_count;
-
+    printf("el valor de _OPENMP: %d\n", _OPENMP);
     thread_count = strtol(argv[1], NULL, 10);
     #pragma omp parallel num_threads(thread_count)
     global_result = Local_Pi();
