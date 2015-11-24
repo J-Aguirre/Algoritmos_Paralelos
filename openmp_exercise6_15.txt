@@ -18,4 +18,4 @@
         a[i] = (i(i+1))/2;
 
 9.
-
+    Cambiando el ambiente y utlizando schedule(runtime) el numero de bloques es determinado por como yo cambio OMP_SCHEDULE
