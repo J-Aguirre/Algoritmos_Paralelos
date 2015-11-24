@@ -6,7 +6,9 @@
     }
 
 7.
-    Porque todas las tareas las realiza un solo thread, por lo cual no existe paralelismo y por lo tanto no existen datos repartidos ni secciones criticas, asi que al realizar las operaciones un unico thread la variable FACTOR que causaba problemas por como los distintos threads accedian a esta, ya no los genera y su ejecucion es correcta obteniendo el valor esperado.
+    Al ser un solo thread no se crean dependencias ya que estaria simulando un sistema secuencial, 
+    el thread se encargaria de todas las iteraciones por lo cual el valor "factor" siempre obtendria 
+    su valor correcto y por lo tanto el valor final seria el estimado.
 
 8.
     int n = 10, i; int a[n];
