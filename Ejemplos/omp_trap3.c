@@ -86,7 +86,7 @@ double Trap(double a, double b, int n, int thread_count) {
    h = (b-a)/n; 
    approx = (f(a) + f(b))/2.0; 
 #  pragma omp parallel for num_threads(thread_count) \
-      reduction(+: approx) schedule(runtime)
+      reduction(+: approx) schedule(guided)
    for (i = 1; i <= n-1; i++){
      approx += f(a + i*h);
      printf("Thread: %d. Iteration: %d\n", omp_get_thread_num(), i);
